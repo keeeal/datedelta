@@ -1,12 +1,13 @@
 
 from dataclasses import dataclass
 from operator import sub
-from typing import Any, Callable, Union
+from typing import Any, Union
 
 import pytest
 from _pytest.python_api import RaisesContext
 
 from datedelta.date import Date, _days_in_month, _is_leap
+from tests.utils import return_or_raise
 
 
 @dataclass
@@ -14,20 +15,6 @@ class MockDateFields:
     year: int
     month: int
     day: int
-
-
-def return_or_raise(
-    expected_result: Union[Any, RaisesContext[Any]],
-    test_function: Callable[..., Any],
-    /,
-    *args: Any,
-    **kwargs: Any,
-) -> None:
-    if isinstance(expected_result, RaisesContext):
-        with expected_result:
-            test_function(*args, **kwargs)
-    else:
-        assert test_function(*args, **kwargs) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -82,7 +69,7 @@ def test_is_valid(
     expected_result: bool,
 ) -> None:
     date_fields = MockDateFields(test_year, test_month, test_day)
-    assert Date.is_valid(date_fields) == expected_result
+    assert Date._is_valid(date_fields) == expected_result
 
 
 @pytest.mark.parametrize(
@@ -109,7 +96,7 @@ def test_post_init(
 @pytest.mark.parametrize(
     "test_string, expected_result",
     [
-        ( "1993-07-13", Date(1993, 7, 13)),
+        ( "1993-07-13",         Date(1993, 7, 13)),
         (  "1993-7-13", pytest.raises(ValueError)),
         ("1993-007-13", pytest.raises(ValueError)),
         ( "1993x07-13", pytest.raises(ValueError)),

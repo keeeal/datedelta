@@ -37,7 +37,7 @@ class Date:
     def __post_init__(self) -> None:
         """A ValueError is raised if the date is invalid at initialization."""
 
-        if not self.is_valid():
+        if not self._is_valid():
             raise ValueError(f"Invalid date: '{self}'")
 
     def __sub__(self, other: Any) -> int:
@@ -45,17 +45,6 @@ class Date:
 
         The difference is defined as the absolute number of days found in
         between the two dates, not including the dates themselves.
-
-        Examples
-        --------
-        >>> Date(2012, 1, 10) - Date(2012, 1, 11)
-        0
-        >>> Date(2012, 1, 1) - Date(2012, 1, 10)
-        8
-        >>> Date(1801, 6, 13) - Date(1801, 11, 11)
-        150
-        >>> Date(2021, 12, 1) - Date(2017, 12, 14)
-        1447
         """
 
         if not isinstance(other, Date):
@@ -78,12 +67,14 @@ class Date:
             Default: "-".
         """
 
-        _format = 10 * [str.isdigit]
-        _format[4] = _format[7] = lambda char: char == sep
+        # Define isoformat by creating a list of functions used to check each
+        # character of the date string for validity.
+        isoformat = 10 * [str.isdigit]
+        isoformat[4] = isoformat[7] = lambda char: char == sep
 
         try:
-            assert len(date_string) == len(_format)
-            assert all(f(char) for f, char in zip(_format, date_string))
+            assert len(date_string) == len(isoformat)
+            assert all(f(char) for f, char in zip(isoformat, date_string))
         except AssertionError:
             raise ValueError(f"Invalid date string: '{date_string}'")
 
@@ -101,14 +92,21 @@ class Date:
         def days_in_month_this_year(month: int) -> int:
             return _days_in_month(self.year, month)
 
+        # Count the number of days to the start of the year.
         ordinal = 365 * self.year
+
+        # Correct for leap year days
         ordinal += self.year // 4 - self.year // 100 + self.year // 400
+
+        # Add the number of days to the start of the month.
         ordinal += sum(map(days_in_month_this_year, range(1, self.month)))
+
+        # Add the date and correcting for negative values.
         ordinal += self.day - int(self.year >= 0)
 
         return ordinal
 
-    def is_valid(self) -> bool:
+    def _is_valid(self) -> bool:
         """Return True if the date is a valid combination of year, month, and
         day in the Gregorian calendar, otherwise return False."""
 
