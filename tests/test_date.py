@@ -1,20 +1,13 @@
 
-from dataclasses import dataclass
 from operator import sub
 from typing import Any, Union
 
 import pytest
+from pytest import MonkeyPatch
 from _pytest.python_api import RaisesContext
 
 from datedelta.date import Date, _days_in_month, _is_leap
 from tests.utils import return_or_raise
-
-
-@dataclass
-class MockDateFields:
-    year: int
-    month: int
-    day: int
 
 
 @pytest.mark.parametrize(
@@ -67,9 +60,12 @@ def test_is_valid(
     test_month: int,
     test_day: int,
     expected_result: bool,
+    monkeypatch: MonkeyPatch,
 ) -> None:
-    date_fields = MockDateFields(test_year, test_month, test_day)
-    assert Date._is_valid(date_fields) == expected_result
+    # Disable __post_init__ so we can create some invalid dates.
+    monkeypatch.setattr('datedelta.Date.__post_init__', lambda _: None)
+    date = Date(test_year, test_month, test_day)
+    assert Date._is_valid(date) == expected_result
 
 
 @pytest.mark.parametrize(

@@ -68,6 +68,7 @@ def test_main_with_arguments(
     expected_result: Union[str, RaisesContext[Any]],
     capture_stdout: list[str],
 ) -> None:
+    # Set sys.argv to simulate calling the program with arguments.
     sys.argv = [sys.argv[0]] + input_string.split()
     return_or_raise(expected_result, lambda: main() or capture_stdout)
 

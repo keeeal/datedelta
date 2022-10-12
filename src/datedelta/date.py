@@ -20,14 +20,16 @@ def _days_in_month(year: int, month: int) -> int:
 class Date:
     """Represents a date in the Gregorian calendar.
 
+    A ``ValueError`` is raised if the date is invalid at initialization.
+
     Parameters
     ----------
     year : `int`
-        The year.
+        The year. Can be positive or negative.
     month : `int`
         An integer in the range [1, 12], where 1 represents January.
     day : `int`
-        The date of the day within the given month.
+        The day of the given month, starting at 1.
     """
 
     year: int
@@ -35,8 +37,6 @@ class Date:
     day: int
 
     def __post_init__(self) -> None:
-        """A ValueError is raised if the date is invalid at initialization."""
-
         if not self._is_valid():
             raise ValueError(f"Invalid date: '{self}'")
 
@@ -54,9 +54,9 @@ class Date:
 
     @classmethod
     def from_isoformat(cls, date_string: str, /, sep: str = "-") -> "Date":
-        """Construct a date by parsing a string of the form 'YYYY-MM-DD'.
+        """Construct a date by parsing a string of the form ``YYYY-MM-DD``.
 
-        A ValueError is raised if the string is invalid.
+        A ``ValueError`` is raised if the string is invalid.
 
         Parameters
         ----------

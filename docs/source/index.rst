@@ -1,13 +1,15 @@
-Welcome to Lumache's documentation!
-===================================
+Welcome to DateDelta's documentation!
+=====================================
 
-**Lumache** (/lu'make/) is a Python library for cooks and food lovers
-that creates recipes mixing random ingredients.
-It pulls data from the `Open Food Facts database <https://world.openfoodfacts.org/>`_
-and offers a *simple* and *intuitive* API.
+**DateDelta** is a Python library and command line tool for computing the
+number of days between two dates.
 
-Check out the :doc:`usage` section for further information, including
-how to :ref:`installation` the project.
+.. image:: ../assets/termtosvg.svg
+  :width: 640
+  :alt: Alternative text
+
+Check out the :doc:`getting started<getting_started>` section for more
+information, including how to :ref:`install<installation>` the project.
 
 .. note::
 
@@ -18,5 +20,6 @@ Contents
 
 .. toctree::
 
+   getting_started
    usage
    api
