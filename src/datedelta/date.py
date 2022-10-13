@@ -37,6 +37,11 @@ class Date:
     day: int
 
     def __post_init__(self) -> None:
+        int_fields = self.year, self.month, self.day
+
+        if not all(isinstance(i, int) for i in int_fields):
+            raise ValueError("Integer argument expected")
+
         if not self._is_valid():
             raise ValueError(f"Invalid date: '{self}'")
 

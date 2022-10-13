@@ -78,6 +78,9 @@ def test_is_valid(
         ( 1993,  7, 32, pytest.raises(ValueError)),  # Day > days in month
         ( 2020,  2, 29,         Date(2020, 2, 29)),  # Valid leap date
         ( 1993,  2, 29, pytest.raises(ValueError)),  # Invalid leap date
+        ( "hi",  7, 13, pytest.raises(ValueError)),  # Not integer
+        ( 1993, [], 13, pytest.raises(ValueError)),  # Not integer
+        ( 1993,  7, .5, pytest.raises(ValueError)),  # Not integer
     ]
 )
 def test_post_init(
